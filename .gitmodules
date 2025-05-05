@@ -1,30 +1,30 @@
 [submodule "external/mlir-hlo"]
 	path = external/mlir-hlo
-	url = https://github.com/tensorflow/mlir-hlo.git
+	url = git@github.com:tensorflow/mlir-hlo.git
 [submodule "external/googletest"]
 	path = external/googletest
-	url = https://github.com/google/googletest
+	url = git@github.com:google/googletest.git
 [submodule "external/date"]
 	path = external/date
-	url = https://github.com/HowardHinnant/date.git
+	url = git@github.com:HowardHinnant/date.git
 [submodule "external/cutlass"]
 	path = external/cutlass
-	url = https://github.com/NVIDIA/cutlass.git
+	url = git@github.com:NVIDIA/cutlass.git
 [submodule "external/pybind11"]
 	path = external/pybind11
-	url = https://github.com/pybind/pybind11.git
+	url = git@github.com:pybind/pybind11.git
 [submodule "frontends/onnx-frontend/third_party/onnx-mlir"]
 	path = frontends/onnx-frontend/third_party/onnx-mlir
-	url = https://github.com/onnx/onnx-mlir.git
+	url = git@github.com:onnx/onnx-mlir.git
 [submodule "frontends/tf-frontend/external/tensorflow"]
 	path = frontends/tf-frontend/external/tensorflow
-	url = https://github.com/tensorflow/tensorflow.git
+	url = git@github.com:tensorflow/tensorflow.git
 [submodule "external/llvm-project"]
 	path = external/llvm-project
-	url = https://github.com/llvm/llvm-project.git
+	url = git@github.com:llvm/llvm-project.git
 [submodule "frontends/torch-frontend/third_party/torch-mlir"]
 	path = frontends/torch-frontend/third_party/torch-mlir
-	url = https://github.com/llvm/torch-mlir.git
+	url = git@github.com:llvm/torch-mlir.git
 [submodule "external/AITemplate"]
 	path = external/AITemplate
-	url = https://github.com/facebookincubator/AITemplate.git
+	url = git@github.com:facebookincubator/AITemplate.git
