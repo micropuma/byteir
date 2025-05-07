@@ -1,0 +1,841 @@
+[ByteIR] Compiling to sm_80
+// IR Dump Input MLIR:
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> {
+    %0 = mhlo.constant dense<0.000000e+00> : tensor<2x20xf32>
+    %1 = mhlo.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %2 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %3 = mhlo.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %4 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %5 = mhlo.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %6 = mhlo.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %7 = "mhlo.transpose"(%1) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<20x10xf32>) -> tensor<10x20xf32>
+    %8 = "mhlo.dot"(%arg0, %7) : (tensor<2x10xf32>, tensor<10x20xf32>) -> tensor<2x20xf32>
+    %9 = "mhlo.broadcast_in_dim"(%2) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %10 = mhlo.add %8, %9 : tensor<2x20xf32>
+    %11 = mhlo.maximum %10, %0 : tensor<2x20xf32>
+    %12 = "mhlo.transpose"(%3) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<20x20xf32>) -> tensor<20x20xf32>
+    %13 = "mhlo.dot"(%11, %12) : (tensor<2x20xf32>, tensor<20x20xf32>) -> tensor<2x20xf32>
+    %14 = "mhlo.broadcast_in_dim"(%4) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %15 = mhlo.add %13, %14 : tensor<2x20xf32>
+    %16 = mhlo.maximum %15, %0 : tensor<2x20xf32>
+    %17 = "mhlo.transpose"(%5) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<10x20xf32>) -> tensor<20x10xf32>
+    %18 = "mhlo.dot"(%16, %17) : (tensor<2x20xf32>, tensor<20x10xf32>) -> tensor<2x10xf32>
+    %19 = "mhlo.broadcast_in_dim"(%6) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<10xf32>) -> tensor<2x10xf32>
+    %20 = mhlo.add %18, %19 : tensor<2x10xf32>
+    return %20 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After Legalize to HLO:
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> {
+    %0 = mhlo.constant dense<0.000000e+00> : tensor<2x20xf32>
+    %1 = mhlo.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %2 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %3 = mhlo.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %4 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %5 = mhlo.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %6 = mhlo.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %7 = "mhlo.transpose"(%1) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<20x10xf32>) -> tensor<10x20xf32>
+    %8 = "mhlo.dot"(%arg0, %7) : (tensor<2x10xf32>, tensor<10x20xf32>) -> tensor<2x20xf32>
+    %9 = "mhlo.broadcast_in_dim"(%2) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %10 = mhlo.add %8, %9 : tensor<2x20xf32>
+    %11 = mhlo.maximum %10, %0 : tensor<2x20xf32>
+    %12 = "mhlo.transpose"(%3) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<20x20xf32>) -> tensor<20x20xf32>
+    %13 = "mhlo.dot"(%11, %12) : (tensor<2x20xf32>, tensor<20x20xf32>) -> tensor<2x20xf32>
+    %14 = "mhlo.broadcast_in_dim"(%4) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %15 = mhlo.add %13, %14 : tensor<2x20xf32>
+    %16 = mhlo.maximum %15, %0 : tensor<2x20xf32>
+    %17 = "mhlo.transpose"(%5) <{permutation = dense<[1, 0]> : tensor<2xi64>}> : (tensor<10x20xf32>) -> tensor<20x10xf32>
+    %18 = "mhlo.dot"(%16, %17) : (tensor<2x20xf32>, tensor<20x10xf32>) -> tensor<2x10xf32>
+    %19 = "mhlo.broadcast_in_dim"(%6) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<10xf32>) -> tensor<2x10xf32>
+    %20 = mhlo.add %18, %19 : tensor<2x10xf32>
+    return %20 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After Hlo Graph Opt:
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> {
+    %0 = mhlo.constant dense<0.000000e+00> : tensor<2x20xf32>
+    %1 = mhlo.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %2 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %3 = mhlo.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %4 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %5 = mhlo.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %6 = mhlo.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %7 = "mhlo.dot_general"(%arg0, %1) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x10xf32>, tensor<20x10xf32>) -> tensor<2x20xf32>
+    %8 = "mhlo.broadcast_in_dim"(%2) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %9 = mhlo.add %7, %8 : tensor<2x20xf32>
+    %10 = mhlo.maximum %9, %0 : tensor<2x20xf32>
+    %11 = "mhlo.dot_general"(%10, %3) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<20x20xf32>) -> tensor<2x20xf32>
+    %12 = "mhlo.broadcast_in_dim"(%4) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %13 = mhlo.add %11, %12 : tensor<2x20xf32>
+    %14 = mhlo.maximum %13, %0 : tensor<2x20xf32>
+    %15 = "mhlo.dot_general"(%14, %5) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<10x20xf32>) -> tensor<2x10xf32>
+    %16 = "mhlo.broadcast_in_dim"(%6) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<10xf32>) -> tensor<2x10xf32>
+    %17 = mhlo.add %15, %16 : tensor<2x10xf32>
+    return %17 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After Hlo Fusion Opt:
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func private @Unknown0(%arg0: tensor<20xf32>, %arg1: tensor<2x20xf32>) -> tensor<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %0 = mhlo.constant dense<0.000000e+00> : tensor<2x20xf32>
+    %1 = "mhlo.broadcast_in_dim"(%arg0) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<20xf32>) -> tensor<2x20xf32>
+    %2 = mhlo.add %arg1, %1 : tensor<2x20xf32>
+    %3 = mhlo.maximum %2, %0 : tensor<2x20xf32>
+    return %3 : tensor<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: tensor<10xf32>, %arg1: tensor<2x10xf32>) -> tensor<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %0 = "mhlo.broadcast_in_dim"(%arg0) <{broadcast_dimensions = dense<1> : tensor<1xi64>}> : (tensor<10xf32>) -> tensor<2x10xf32>
+    %1 = mhlo.add %arg1, %0 : tensor<2x10xf32>
+    return %1 : tensor<2x10xf32>
+  }
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> {
+    %0 = mhlo.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %1 = mhlo.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %2 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %3 = mhlo.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %4 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %5 = mhlo.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %6 = "mhlo.dot_general"(%arg0, %5) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x10xf32>, tensor<20x10xf32>) -> tensor<2x20xf32>
+    %7 = call @Unknown0(%4, %6) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %8 = "mhlo.dot_general"(%7, %3) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<20x20xf32>) -> tensor<2x20xf32>
+    %9 = call @Unknown0(%2, %8) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %10 = "mhlo.dot_general"(%9, %1) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<10x20xf32>) -> tensor<2x10xf32>
+    %11 = call @Unknown2(%0, %10) : (tensor<10xf32>, tensor<2x10xf32>) -> tensor<2x10xf32>
+    return %11 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After Linalg Tensor Opt:
+#map = affine_map<() -> ()>
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func private @Unknown0(%arg0: tensor<20xf32>, %arg1: tensor<2x20xf32>) -> tensor<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %c20 = arith.constant 20 : index
+    %c1 = arith.constant 1 : index
+    %c2 = arith.constant 2 : index
+    %c0 = arith.constant 0 : index
+    %cst = arith.constant 0.000000e+00 : f32
+    %0 = tensor.empty() : tensor<2x20xf32>
+    %1 = scf.for %arg2 = %c0 to %c2 step %c1 iter_args(%arg3 = %0) -> (tensor<2x20xf32>) {
+      %2 = scf.for %arg4 = %c0 to %c20 step %c1 iter_args(%arg5 = %arg3) -> (tensor<2x20xf32>) {
+        %extracted_slice = tensor.extract_slice %arg0[%arg4] [1] [1] : tensor<20xf32> to tensor<f32>
+        %extracted_slice_0 = tensor.extract_slice %arg1[%arg2, %arg4] [1, 1] [1, 1] : tensor<2x20xf32> to tensor<f32>
+        %3 = tensor.empty() : tensor<f32>
+        %4 = linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%extracted_slice, %extracted_slice_0 : tensor<f32>, tensor<f32>) outs(%3 : tensor<f32>) {
+        ^bb0(%in: f32, %in_1: f32, %out: f32):
+          %5 = arith.addf %in_1, %in : f32
+          %6 = arith.maximumf %5, %cst : f32
+          linalg.yield %6 : f32
+        } -> tensor<f32>
+        %inserted_slice = tensor.insert_slice %4 into %arg5[%arg2, %arg4] [1, 1] [1, 1] : tensor<f32> into tensor<2x20xf32>
+        scf.yield %inserted_slice : tensor<2x20xf32>
+      }
+      scf.yield %2 : tensor<2x20xf32>
+    }
+    return %1 : tensor<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: tensor<10xf32>, %arg1: tensor<2x10xf32>) -> tensor<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %c10 = arith.constant 10 : index
+    %c1 = arith.constant 1 : index
+    %c2 = arith.constant 2 : index
+    %c0 = arith.constant 0 : index
+    %0 = tensor.empty() : tensor<2x10xf32>
+    %1 = scf.for %arg2 = %c0 to %c2 step %c1 iter_args(%arg3 = %0) -> (tensor<2x10xf32>) {
+      %2 = scf.for %arg4 = %c0 to %c10 step %c1 iter_args(%arg5 = %arg3) -> (tensor<2x10xf32>) {
+        %extracted_slice = tensor.extract_slice %arg0[%arg4] [1] [1] : tensor<10xf32> to tensor<f32>
+        %extracted_slice_0 = tensor.extract_slice %arg1[%arg2, %arg4] [1, 1] [1, 1] : tensor<2x10xf32> to tensor<f32>
+        %3 = tensor.empty() : tensor<f32>
+        %4 = linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%extracted_slice, %extracted_slice_0 : tensor<f32>, tensor<f32>) outs(%3 : tensor<f32>) {
+        ^bb0(%in: f32, %in_1: f32, %out: f32):
+          %5 = arith.addf %in_1, %in : f32
+          linalg.yield %5 : f32
+        } -> tensor<f32>
+        %inserted_slice = tensor.insert_slice %4 into %arg5[%arg2, %arg4] [1, 1] [1, 1] : tensor<f32> into tensor<2x10xf32>
+        scf.yield %inserted_slice : tensor<2x10xf32>
+      }
+      scf.yield %2 : tensor<2x10xf32>
+    }
+    return %1 : tensor<2x10xf32>
+  }
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> {
+    %0 = mhlo.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %1 = mhlo.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %2 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %3 = mhlo.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %4 = mhlo.constant dense_resource<__elided__> : tensor<20xf32>
+    %5 = mhlo.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %6 = "mhlo.dot_general"(%arg0, %5) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x10xf32>, tensor<20x10xf32>) -> tensor<2x20xf32>
+    %7 = call @Unknown0(%4, %6) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %8 = "mhlo.dot_general"(%7, %3) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<20x20xf32>) -> tensor<2x20xf32>
+    %9 = call @Unknown0(%2, %8) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %10 = "mhlo.dot_general"(%9, %1) <{dot_dimension_numbers = #mhlo.dot<lhs_contracting_dimensions = [1], rhs_contracting_dimensions = [1]>}> : (tensor<2x20xf32>, tensor<10x20xf32>) -> tensor<2x10xf32>
+    %11 = call @Unknown2(%0, %10) : (tensor<10xf32>, tensor<2x10xf32>) -> tensor<2x10xf32>
+    return %11 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After Byre Tensor Opt:
+#map = affine_map<() -> ()>
+module attributes {torch.debug_module_name = "GraphModule"} {
+  func.func private @Unknown0(%arg0: tensor<20xf32>, %arg1: tensor<2x20xf32>) -> tensor<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %c20 = arith.constant 20 : index
+    %c1 = arith.constant 1 : index
+    %c2 = arith.constant 2 : index
+    %c0 = arith.constant 0 : index
+    %cst = arith.constant 0.000000e+00 : f32
+    %0 = tensor.empty() : tensor<2x20xf32>
+    %1 = scf.for %arg2 = %c0 to %c2 step %c1 iter_args(%arg3 = %0) -> (tensor<2x20xf32>) {
+      %2 = scf.for %arg4 = %c0 to %c20 step %c1 iter_args(%arg5 = %arg3) -> (tensor<2x20xf32>) {
+        %extracted_slice = tensor.extract_slice %arg0[%arg4] [1] [1] : tensor<20xf32> to tensor<f32>
+        %extracted_slice_0 = tensor.extract_slice %arg1[%arg2, %arg4] [1, 1] [1, 1] : tensor<2x20xf32> to tensor<f32>
+        %3 = tensor.empty() : tensor<f32>
+        %4 = linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%extracted_slice, %extracted_slice_0 : tensor<f32>, tensor<f32>) outs(%3 : tensor<f32>) {
+        ^bb0(%in: f32, %in_1: f32, %out: f32):
+          %5 = arith.addf %in_1, %in : f32
+          %6 = arith.maximumf %5, %cst : f32
+          linalg.yield %6 : f32
+        } -> tensor<f32>
+        %inserted_slice = tensor.insert_slice %4 into %arg5[%arg2, %arg4] [1, 1] [1, 1] : tensor<f32> into tensor<2x20xf32>
+        scf.yield %inserted_slice : tensor<2x20xf32>
+      }
+      scf.yield %2 : tensor<2x20xf32>
+    }
+    return %1 : tensor<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: tensor<10xf32>, %arg1: tensor<2x10xf32>) -> tensor<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %c10 = arith.constant 10 : index
+    %c1 = arith.constant 1 : index
+    %c2 = arith.constant 2 : index
+    %c0 = arith.constant 0 : index
+    %0 = tensor.empty() : tensor<2x10xf32>
+    %1 = scf.for %arg2 = %c0 to %c2 step %c1 iter_args(%arg3 = %0) -> (tensor<2x10xf32>) {
+      %2 = scf.for %arg4 = %c0 to %c10 step %c1 iter_args(%arg5 = %arg3) -> (tensor<2x10xf32>) {
+        %extracted_slice = tensor.extract_slice %arg0[%arg4] [1] [1] : tensor<10xf32> to tensor<f32>
+        %extracted_slice_0 = tensor.extract_slice %arg1[%arg2, %arg4] [1, 1] [1, 1] : tensor<2x10xf32> to tensor<f32>
+        %3 = tensor.empty() : tensor<f32>
+        %4 = linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%extracted_slice, %extracted_slice_0 : tensor<f32>, tensor<f32>) outs(%3 : tensor<f32>) {
+        ^bb0(%in: f32, %in_1: f32, %out: f32):
+          %5 = arith.addf %in_1, %in : f32
+          linalg.yield %5 : f32
+        } -> tensor<f32>
+        %inserted_slice = tensor.insert_slice %4 into %arg5[%arg2, %arg4] [1, 1] [1, 1] : tensor<f32> into tensor<2x10xf32>
+        scf.yield %inserted_slice : tensor<2x10xf32>
+      }
+      scf.yield %2 : tensor<2x10xf32>
+    }
+    return %1 : tensor<2x10xf32>
+  }
+  func.func @forward(%arg0: tensor<2x10xf32>) -> tensor<2x10xf32> attributes {__placeholder__byre.entry_point} {
+    %cst = arith.constant dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>
+    %cst_0 = arith.constant dense_resource<__elided__> : tensor<10x20xf32>
+    %cst_1 = arith.constant dense_resource<__elided__> : tensor<20xf32>
+    %cst_2 = arith.constant dense_resource<__elided__> : tensor<20x20xf32>
+    %cst_3 = arith.constant dense_resource<__elided__> : tensor<20xf32>
+    %cst_4 = arith.constant dense_resource<__elided__> : tensor<20x10xf32>
+    %0 = tensor.empty() : tensor<2x20xf32>
+    %1 = byre.compute_on_tensor @MatmulOp_f32f32_f32 {lhs_contracting_dimension = 1 : i64, rhs_contracting_dimension = 1 : i64} ins(%arg0, %cst_4 : tensor<2x10xf32>, tensor<20x10xf32>) outs(%0 : tensor<2x20xf32>) : tensor<2x20xf32>
+    %2 = call @Unknown0(%cst_3, %1) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %3 = tensor.empty() : tensor<2x20xf32>
+    %4 = byre.compute_on_tensor @MatmulOp_f32f32_f32 {lhs_contracting_dimension = 1 : i64, rhs_contracting_dimension = 1 : i64} ins(%2, %cst_2 : tensor<2x20xf32>, tensor<20x20xf32>) outs(%3 : tensor<2x20xf32>) : tensor<2x20xf32>
+    %5 = call @Unknown0(%cst_1, %4) : (tensor<20xf32>, tensor<2x20xf32>) -> tensor<2x20xf32>
+    %6 = tensor.empty() : tensor<2x10xf32>
+    %7 = byre.compute_on_tensor @MatmulOp_f32f32_f32 {lhs_contracting_dimension = 1 : i64, rhs_contracting_dimension = 1 : i64} ins(%5, %cst_0 : tensor<2x20xf32>, tensor<10x20xf32>) outs(%6 : tensor<2x10xf32>) : tensor<2x10xf32>
+    %8 = call @Unknown2(%cst, %7) : (tensor<10xf32>, tensor<2x10xf32>) -> tensor<2x10xf32>
+    return %8 : tensor<2x10xf32>
+  }
+}
+
+
+// IR Dump After ByteIR Bufferize Opt:
+#map = affine_map<() -> ()>
+module attributes {torch.debug_module_name = "GraphModule"} {
+  memref.global "private" constant @__constant_20x10xf32 : memref<20x10xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32 : memref<20x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32 : memref<10x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32 : memref<10xf32> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+  func.func private @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>) -> memref<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %cst = arith.constant 0.000000e+00 : f32
+    %c0 = arith.constant 0 : index
+    %c2 = arith.constant 2 : index
+    %c1 = arith.constant 1 : index
+    %c20 = arith.constant 20 : index
+    %alloc = memref.alloc() : memref<2x20xf32>
+    scf.for %arg2 = %c0 to %c2 step %c1 {
+      scf.for %arg3 = %c0 to %c20 step %c1 {
+        %subview = memref.subview %arg0[%arg3] [1] [1] : memref<20xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_0 = memref.subview %alloc[%arg2, %arg3] [1, 1] [1, 1] : memref<2x20xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_1 = memref.subview %arg1[%arg2, %arg3] [1, 1] [1, 1] : memref<2x20xf32> to memref<f32, strided<[], offset: ?>>
+        linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%subview, %subview_1 : memref<f32, strided<[], offset: ?>>, memref<f32, strided<[], offset: ?>>) outs(%subview_0 : memref<f32, strided<[], offset: ?>>) {
+        ^bb0(%in: f32, %in_2: f32, %out: f32):
+          %0 = arith.addf %in_2, %in : f32
+          %1 = arith.maximumf %0, %cst : f32
+          linalg.yield %1 : f32
+        }
+      }
+    }
+    return %alloc : memref<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>) -> memref<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %c0 = arith.constant 0 : index
+    %c2 = arith.constant 2 : index
+    %c1 = arith.constant 1 : index
+    %c10 = arith.constant 10 : index
+    %alloc = memref.alloc() : memref<2x10xf32>
+    scf.for %arg2 = %c0 to %c2 step %c1 {
+      scf.for %arg3 = %c0 to %c10 step %c1 {
+        %subview = memref.subview %arg0[%arg3] [1] [1] : memref<10xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_0 = memref.subview %alloc[%arg2, %arg3] [1, 1] [1, 1] : memref<2x10xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_1 = memref.subview %arg1[%arg2, %arg3] [1, 1] [1, 1] : memref<2x10xf32> to memref<f32, strided<[], offset: ?>>
+        linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%subview, %subview_1 : memref<f32, strided<[], offset: ?>>, memref<f32, strided<[], offset: ?>>) outs(%subview_0 : memref<f32, strided<[], offset: ?>>) {
+        ^bb0(%in: f32, %in_2: f32, %out: f32):
+          %0 = arith.addf %in_2, %in : f32
+          linalg.yield %0 : f32
+        }
+      }
+    }
+    return %alloc : memref<2x10xf32>
+  }
+  func.func @forward(%arg0: memref<2x10xf32>) -> memref<2x10xf32> attributes {__placeholder__byre.entry_point} {
+    %0 = memref.get_global @__constant_10xf32 : memref<10xf32>
+    %1 = memref.get_global @__constant_10x20xf32 : memref<10x20xf32>
+    %2 = memref.get_global @__constant_20xf32 : memref<20xf32>
+    %3 = memref.get_global @__constant_20x20xf32 : memref<20x20xf32>
+    %4 = memref.get_global @__constant_20xf32_0 : memref<20xf32>
+    %5 = memref.get_global @__constant_20x10xf32 : memref<20x10xf32>
+    %alloc = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%arg0, %5, %alloc) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32>, memref<20x10xf32>, memref<2x20xf32>
+    %6 = call @Unknown0(%4, %alloc) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_0 = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%6, %3, %alloc_0) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<20x20xf32>, memref<2x20xf32>
+    %7 = call @Unknown0(%2, %alloc_0) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_1 = memref.alloc() : memref<2x10xf32>
+    byre.compute @MatmulOp_f32f32_f32(%7, %1, %alloc_1) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<10x20xf32>, memref<2x10xf32>
+    %8 = call @Unknown2(%0, %alloc_1) : (memref<10xf32>, memref<2x10xf32>) -> memref<2x10xf32>
+    return %8 : memref<2x10xf32>
+  }
+}
+
+
+// IR Dump After Linalg Memref Opt:
+#map = affine_map<() -> ()>
+module attributes {torch.debug_module_name = "GraphModule"} {
+  memref.global "private" constant @__constant_20x10xf32 : memref<20x10xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32 : memref<20x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32 : memref<10x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32 : memref<10xf32> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+  func.func private @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>) -> memref<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %cst = arith.constant 0.000000e+00 : f32
+    %c0 = arith.constant 0 : index
+    %c2 = arith.constant 2 : index
+    %c1 = arith.constant 1 : index
+    %c20 = arith.constant 20 : index
+    %alloc = memref.alloc() : memref<2x20xf32>
+    scf.for %arg2 = %c0 to %c2 step %c1 {
+      scf.for %arg3 = %c0 to %c20 step %c1 {
+        %subview = memref.subview %arg0[%arg3] [1] [1] : memref<20xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_0 = memref.subview %alloc[%arg2, %arg3] [1, 1] [1, 1] : memref<2x20xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_1 = memref.subview %arg1[%arg2, %arg3] [1, 1] [1, 1] : memref<2x20xf32> to memref<f32, strided<[], offset: ?>>
+        linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%subview, %subview_1 : memref<f32, strided<[], offset: ?>>, memref<f32, strided<[], offset: ?>>) outs(%subview_0 : memref<f32, strided<[], offset: ?>>) {
+        ^bb0(%in: f32, %in_2: f32, %out: f32):
+          %0 = arith.addf %in_2, %in : f32
+          %1 = arith.maximumf %0, %cst : f32
+          linalg.yield %1 : f32
+        }
+      }
+    }
+    return %alloc : memref<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>) -> memref<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %c0 = arith.constant 0 : index
+    %c2 = arith.constant 2 : index
+    %c1 = arith.constant 1 : index
+    %c10 = arith.constant 10 : index
+    %alloc = memref.alloc() : memref<2x10xf32>
+    scf.for %arg2 = %c0 to %c2 step %c1 {
+      scf.for %arg3 = %c0 to %c10 step %c1 {
+        %subview = memref.subview %arg0[%arg3] [1] [1] : memref<10xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_0 = memref.subview %alloc[%arg2, %arg3] [1, 1] [1, 1] : memref<2x10xf32> to memref<f32, strided<[], offset: ?>>
+        %subview_1 = memref.subview %arg1[%arg2, %arg3] [1, 1] [1, 1] : memref<2x10xf32> to memref<f32, strided<[], offset: ?>>
+        linalg.generic {indexing_maps = [#map, #map, #map], iterator_types = []} ins(%subview, %subview_1 : memref<f32, strided<[], offset: ?>>, memref<f32, strided<[], offset: ?>>) outs(%subview_0 : memref<f32, strided<[], offset: ?>>) {
+        ^bb0(%in: f32, %in_2: f32, %out: f32):
+          %0 = arith.addf %in_2, %in : f32
+          linalg.yield %0 : f32
+        }
+      }
+    }
+    return %alloc : memref<2x10xf32>
+  }
+  func.func @forward(%arg0: memref<2x10xf32>) -> memref<2x10xf32> attributes {__placeholder__byre.entry_point} {
+    %0 = memref.get_global @__constant_10xf32 : memref<10xf32>
+    %1 = memref.get_global @__constant_10x20xf32 : memref<10x20xf32>
+    %2 = memref.get_global @__constant_20xf32 : memref<20xf32>
+    %3 = memref.get_global @__constant_20x20xf32 : memref<20x20xf32>
+    %4 = memref.get_global @__constant_20xf32_0 : memref<20xf32>
+    %5 = memref.get_global @__constant_20x10xf32 : memref<20x10xf32>
+    %alloc = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%arg0, %5, %alloc) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32>, memref<20x10xf32>, memref<2x20xf32>
+    %6 = call @Unknown0(%4, %alloc) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_0 = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%6, %3, %alloc_0) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<20x20xf32>, memref<2x20xf32>
+    %7 = call @Unknown0(%2, %alloc_0) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_1 = memref.alloc() : memref<2x10xf32>
+    byre.compute @MatmulOp_f32f32_f32(%7, %1, %alloc_1) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<10x20xf32>, memref<2x10xf32>
+    %8 = call @Unknown2(%0, %alloc_1) : (memref<10xf32>, memref<2x10xf32>) -> memref<2x10xf32>
+    return %8 : memref<2x10xf32>
+  }
+}
+
+
+// IR Dump After SCF Opt:
+module attributes {torch.debug_module_name = "GraphModule"} {
+  memref.global "private" constant @__constant_20x10xf32 : memref<20x10xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32 : memref<20x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32 : memref<10x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32 : memref<10xf32> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+  func.func private @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>) -> memref<2x20xf32> attributes {__byteir_elementwise_fusion__} {
+    %c20 = arith.constant 20 : index
+    %c1 = arith.constant 1 : index
+    %c0 = arith.constant 0 : index
+    %cst = arith.constant 0.000000e+00 : f32
+    %c40 = arith.constant 40 : index
+    %alloc = memref.alloc() : memref<2x20xf32>
+    scf.for %arg2 = %c0 to %c40 step %c1 {
+      %0 = arith.remsi %arg2, %c20 : index
+      %1 = arith.divsi %arg2, %c20 : index
+      %2 = memref.load %arg0[%0] : memref<20xf32>
+      %3 = memref.load %arg1[%1, %0] : memref<2x20xf32>
+      %4 = arith.addf %3, %2 : f32
+      %5 = arith.maximumf %4, %cst : f32
+      memref.store %5, %alloc[%1, %0] : memref<2x20xf32>
+    }
+    return %alloc : memref<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>) -> memref<2x10xf32> attributes {__byteir_elementwise_fusion__} {
+    %c10 = arith.constant 10 : index
+    %c1 = arith.constant 1 : index
+    %c0 = arith.constant 0 : index
+    %c20 = arith.constant 20 : index
+    %alloc = memref.alloc() : memref<2x10xf32>
+    scf.for %arg2 = %c0 to %c20 step %c1 {
+      %0 = arith.remsi %arg2, %c10 : index
+      %1 = arith.divsi %arg2, %c10 : index
+      %2 = memref.load %arg0[%0] : memref<10xf32>
+      %3 = memref.load %arg1[%1, %0] : memref<2x10xf32>
+      %4 = arith.addf %3, %2 : f32
+      memref.store %4, %alloc[%1, %0] : memref<2x10xf32>
+    }
+    return %alloc : memref<2x10xf32>
+  }
+  func.func @forward(%arg0: memref<2x10xf32>) -> memref<2x10xf32> attributes {__placeholder__byre.entry_point} {
+    %0 = memref.get_global @__constant_10xf32 : memref<10xf32>
+    %1 = memref.get_global @__constant_10x20xf32 : memref<10x20xf32>
+    %2 = memref.get_global @__constant_20xf32 : memref<20xf32>
+    %3 = memref.get_global @__constant_20x20xf32 : memref<20x20xf32>
+    %4 = memref.get_global @__constant_20xf32_0 : memref<20xf32>
+    %5 = memref.get_global @__constant_20x10xf32 : memref<20x10xf32>
+    %alloc = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%arg0, %5, %alloc) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32>, memref<20x10xf32>, memref<2x20xf32>
+    %6 = call @Unknown0(%4, %alloc) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_0 = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%6, %3, %alloc_0) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<20x20xf32>, memref<2x20xf32>
+    %7 = call @Unknown0(%2, %alloc_0) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_1 = memref.alloc() : memref<2x10xf32>
+    byre.compute @MatmulOp_f32f32_f32(%7, %1, %alloc_1) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<10x20xf32>, memref<2x10xf32>
+    %8 = call @Unknown2(%0, %alloc_1) : (memref<10xf32>, memref<2x10xf32>) -> memref<2x10xf32>
+    return %8 : memref<2x10xf32>
+  }
+}
+
+
+// IR Dump After GPU Opt:
+module attributes {gpu.container_module, torch.debug_module_name = "GraphModule"} {
+  gpu.module @unified {
+    gpu.func @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>, %arg2: memref<2x10xf32>) kernel {
+      %c20 = arith.constant 20 : index
+      %c10 = arith.constant 10 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c20 step %2 {
+        %3 = arith.remsi %arg3, %c10 : index
+        %4 = arith.divsi %arg3, %c10 : index
+        %5 = memref.load %arg0[%3] : memref<10xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x10xf32>
+        %7 = arith.addf %6, %5 : f32
+        memref.store %7, %arg2[%4, %3] : memref<2x10xf32>
+      }
+      gpu.return
+    }
+    gpu.func @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>, %arg2: memref<2x20xf32>) kernel {
+      %c40 = arith.constant 40 : index
+      %cst = arith.constant 0.000000e+00 : f32
+      %c20 = arith.constant 20 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c40 step %2 {
+        %3 = arith.remsi %arg3, %c20 : index
+        %4 = arith.divsi %arg3, %c20 : index
+        %5 = memref.load %arg0[%3] : memref<20xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x20xf32>
+        %7 = arith.addf %6, %5 : f32
+        %8 = arith.maximumf %7, %cst : f32
+        memref.store %8, %arg2[%4, %3] : memref<2x20xf32>
+      }
+      gpu.return
+    }
+  }
+  memref.global "private" constant @__constant_20x10xf32 : memref<20x10xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32 : memref<20x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32 : memref<20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32 : memref<10x20xf32> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32 : memref<10xf32> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+  func.func private @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>) -> memref<2x20xf32> attributes {__byre__arg_ranks = [1 : i32, 2 : i32, 2 : i32], __byteir_elementwise_fusion__, arg_offsets = [0 : i32, 1 : i32, 2 : i32]} {
+    %c1 = arith.constant 1 : index
+    %c256 = arith.constant 256 : index
+    %alloc = memref.alloc() : memref<2x20xf32>
+    gpu.launch_func  @unified::@Unknown0 blocks in (%c1, %c1, %c1) threads in (%c256, %c1, %c1)  args(%arg0 : memref<20xf32>, %arg1 : memref<2x20xf32>, %alloc : memref<2x20xf32>) {call_convention = "bare_ptr", device_file_name = "out.ptx"}
+    return %alloc : memref<2x20xf32>
+  }
+  func.func private @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>) -> memref<2x10xf32> attributes {__byre__arg_ranks = [1 : i32, 2 : i32, 2 : i32], __byteir_elementwise_fusion__, arg_offsets = [0 : i32, 1 : i32, 2 : i32]} {
+    %c1 = arith.constant 1 : index
+    %c256 = arith.constant 256 : index
+    %alloc = memref.alloc() : memref<2x10xf32>
+    gpu.launch_func  @unified::@Unknown2 blocks in (%c1, %c1, %c1) threads in (%c256, %c1, %c1)  args(%arg0 : memref<10xf32>, %arg1 : memref<2x10xf32>, %alloc : memref<2x10xf32>) {call_convention = "bare_ptr", device_file_name = "out.ptx"}
+    return %alloc : memref<2x10xf32>
+  }
+  func.func @forward(%arg0: memref<2x10xf32>) -> memref<2x10xf32> attributes {__placeholder__byre.entry_point} {
+    %0 = memref.get_global @__constant_10xf32 : memref<10xf32>
+    %1 = memref.get_global @__constant_10x20xf32 : memref<10x20xf32>
+    %2 = memref.get_global @__constant_20xf32 : memref<20xf32>
+    %3 = memref.get_global @__constant_20x20xf32 : memref<20x20xf32>
+    %4 = memref.get_global @__constant_20xf32_0 : memref<20xf32>
+    %5 = memref.get_global @__constant_20x10xf32 : memref<20x10xf32>
+    %alloc = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%arg0, %5, %alloc) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32>, memref<20x10xf32>, memref<2x20xf32>
+    %6 = call @Unknown0(%4, %alloc) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_0 = memref.alloc() : memref<2x20xf32>
+    byre.compute @MatmulOp_f32f32_f32(%6, %3, %alloc_0) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<20x20xf32>, memref<2x20xf32>
+    %7 = call @Unknown0(%2, %alloc_0) : (memref<20xf32>, memref<2x20xf32>) -> memref<2x20xf32>
+    %alloc_1 = memref.alloc() : memref<2x10xf32>
+    byre.compute @MatmulOp_f32f32_f32(%7, %1, %alloc_1) {lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32>, memref<10x20xf32>, memref<2x10xf32>
+    %8 = call @Unknown2(%0, %alloc_1) : (memref<10xf32>, memref<2x10xf32>) -> memref<2x10xf32>
+    return %8 : memref<2x10xf32>
+  }
+}
+
+
+// IR Dump After Set Space Opt:
+module attributes {gpu.container_module, torch.debug_module_name = "GraphModule"} {
+  gpu.module @unified {
+    gpu.func @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>, %arg2: memref<2x10xf32>) kernel {
+      %c20 = arith.constant 20 : index
+      %c10 = arith.constant 10 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c20 step %2 {
+        %3 = arith.remsi %arg3, %c10 : index
+        %4 = arith.divsi %arg3, %c10 : index
+        %5 = memref.load %arg0[%3] : memref<10xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x10xf32>
+        %7 = arith.addf %6, %5 : f32
+        memref.store %7, %arg2[%4, %3] : memref<2x10xf32>
+      }
+      gpu.return
+    }
+    gpu.func @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>, %arg2: memref<2x20xf32>) kernel {
+      %c40 = arith.constant 40 : index
+      %cst = arith.constant 0.000000e+00 : f32
+      %c20 = arith.constant 20 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c40 step %2 {
+        %3 = arith.remsi %arg3, %c20 : index
+        %4 = arith.divsi %arg3, %c20 : index
+        %5 = memref.load %arg0[%3] : memref<20xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x20xf32>
+        %7 = arith.addf %6, %5 : f32
+        %8 = arith.maximumf %7, %cst : f32
+        memref.store %8, %arg2[%4, %3] : memref<2x20xf32>
+      }
+      gpu.return
+    }
+  }
+  func.func @forward(%arg0: memref<2x10xf32, "cuda">) -> memref<2x10xf32, "cuda"> attributes {__placeholder__byre.entry_point} {
+    %0 = memref.get_global @__constant_10xf32_cuda : memref<10xf32, "cuda"> {device = "cuda"}
+    %1 = memref.get_global @__constant_10x20xf32_cuda : memref<10x20xf32, "cuda"> {device = "cuda"}
+    %2 = memref.get_global @__constant_20xf32_cuda : memref<20xf32, "cuda"> {device = "cuda"}
+    %3 = memref.get_global @__constant_20x20xf32_cuda : memref<20x20xf32, "cuda"> {device = "cuda"}
+    %4 = memref.get_global @__constant_20xf32_0_cuda : memref<20xf32, "cuda"> {device = "cuda"}
+    %5 = memref.get_global @__constant_20x10xf32_cuda : memref<20x10xf32, "cuda"> {device = "cuda"}
+    %alloc = memref.alloc() : memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%arg0, %5, %alloc) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32, "cuda">, memref<20x10xf32, "cuda">, memref<2x20xf32, "cuda">
+    %alloc_0 = memref.alloc() : memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%4, %alloc, %alloc_0) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    %alloc_1 = memref.alloc() : memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%alloc_0, %3, %alloc_1) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<20x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    %alloc_2 = memref.alloc() : memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%2, %alloc_1, %alloc_2) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    %alloc_3 = memref.alloc() : memref<2x10xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%alloc_2, %1, %alloc_3) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<10x20xf32, "cuda">, memref<2x10xf32, "cuda">
+    %alloc_4 = memref.alloc() : memref<2x10xf32, "cuda">
+    byre.compute @PTXOp(%0, %alloc_3, %alloc_4) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown2"} : memref<10xf32, "cuda">, memref<2x10xf32, "cuda">, memref<2x10xf32, "cuda">
+    return %alloc_4 : memref<2x10xf32, "cuda">
+  }
+  memref.global "private" constant @__constant_20x10xf32_cuda : memref<20x10xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32_cuda : memref<20x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32_cuda : memref<10x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32_cuda : memref<10xf32, "cuda"> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+}
+
+
+// IR Dump After Byre Opt:
+module attributes {byre.container_module, gpu.container_module, torch.debug_module_name = "GraphModule"} {
+  gpu.module @unified {
+    gpu.func @Unknown2(%arg0: memref<10xf32>, %arg1: memref<2x10xf32>, %arg2: memref<2x10xf32>) kernel {
+      %c20 = arith.constant 20 : index
+      %c10 = arith.constant 10 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c20 step %2 {
+        %3 = arith.remsi %arg3, %c10 : index
+        %4 = arith.divsi %arg3, %c10 : index
+        %5 = memref.load %arg0[%3] : memref<10xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x10xf32>
+        %7 = arith.addf %6, %5 : f32
+        memref.store %7, %arg2[%4, %3] : memref<2x10xf32>
+      }
+      gpu.return
+    }
+    gpu.func @Unknown0(%arg0: memref<20xf32>, %arg1: memref<2x20xf32>, %arg2: memref<2x20xf32>) kernel {
+      %c40 = arith.constant 40 : index
+      %cst = arith.constant 0.000000e+00 : f32
+      %c20 = arith.constant 20 : index
+      %block_id_x = gpu.block_id  x
+      %block_dim_x = gpu.block_dim  x
+      %thread_id_x = gpu.thread_id  x
+      %0 = arith.muli %block_dim_x, %block_id_x : index
+      %1 = arith.addi %thread_id_x, %0 : index
+      %grid_dim_x = gpu.grid_dim  x
+      %2 = arith.muli %block_dim_x, %grid_dim_x : index
+      scf.for %arg3 = %1 to %c40 step %2 {
+        %3 = arith.remsi %arg3, %c20 : index
+        %4 = arith.divsi %arg3, %c20 : index
+        %5 = memref.load %arg0[%3] : memref<20xf32>
+        %6 = memref.load %arg1[%4, %3] : memref<2x20xf32>
+        %7 = arith.addf %6, %5 : f32
+        %8 = arith.maximumf %7, %cst : f32
+        memref.store %8, %arg2[%4, %3] : memref<2x20xf32>
+      }
+      gpu.return
+    }
+  }
+  func.func @forward(%arg0: memref<10xf32, "cuda"> {byre.argname = "Weight0", byre.argtype = 4 : i32, byre.weight_value = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>}, %arg1: memref<10x20xf32, "cuda"> {byre.argname = "Weight1", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<10x20xf32>}, %arg2: memref<20xf32, "cuda"> {byre.argname = "Weight2", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20xf32>}, %arg3: memref<20x20xf32, "cuda"> {byre.argname = "Weight3", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20x20xf32>}, %arg4: memref<20xf32, "cuda"> {byre.argname = "Weight4", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20xf32>}, %arg5: memref<20x10xf32, "cuda"> {byre.argname = "Weight5", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20x10xf32>}, %arg6: memref<2x10xf32, "cuda"> {byre.argname = "Input0", byre.argtype = 1 : i32}, %arg7: memref<2x10xf32, "cuda"> {byre.argname = "Output0", byre.argtype = 2 : i32}) attributes {byre.entry_point} {
+    %alloc = memref.alloc() : memref<512xi8, "cuda">
+    %0 = "byre.alias"(%alloc) <{offset = 0 : i64}> : (memref<512xi8, "cuda">) -> memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%arg6, %arg5, %0) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32, "cuda">, memref<20x10xf32, "cuda">, memref<2x20xf32, "cuda">
+    %1 = "byre.alias"(%alloc) <{offset = 256 : i64}> : (memref<512xi8, "cuda">) -> memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%arg4, %0, %1) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%1, %arg3, %0) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<20x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%arg2, %0, %1) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    %2 = "byre.alias"(%alloc) <{offset = 0 : i64}> : (memref<512xi8, "cuda">) -> memref<2x10xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%1, %arg1, %2) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<10x20xf32, "cuda">, memref<2x10xf32, "cuda">
+    byre.compute @PTXOp(%arg0, %2, %arg7) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown2"} : memref<10xf32, "cuda">, memref<2x10xf32, "cuda">, memref<2x10xf32, "cuda">
+    return
+  }
+  memref.global "private" constant @__constant_20x10xf32_cuda : memref<20x10xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32_cuda : memref<20x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32_cuda : memref<10x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32_cuda : memref<10xf32, "cuda"> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+}
+
+
+// IR Dump After NVVM Codegen:
+module attributes {byre.container_module, gpu.container_module, torch.debug_module_name = "GraphModule"} {
+  gpu.module @unified {
+    llvm.func @Unknown2(%arg0: !llvm.ptr {llvm.noalias}, %arg1: !llvm.ptr {llvm.noalias}, %arg2: !llvm.ptr {llvm.noalias}) attributes {gpu.kernel, nvvm.kernel} {
+      %0 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)>
+      %1 = llvm.insertvalue %arg0, %0[0] : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)> 
+      %2 = llvm.insertvalue %arg0, %1[1] : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)> 
+      %3 = llvm.mlir.constant(0 : index) : i64
+      %4 = llvm.mlir.constant(10 : index) : i64
+      %5 = llvm.mlir.constant(1 : index) : i64
+      %6 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)>
+      %7 = llvm.insertvalue %arg1, %6[0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %8 = llvm.insertvalue %arg1, %7[1] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %9 = llvm.insertvalue %3, %8[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %10 = llvm.mlir.constant(2 : index) : i64
+      %11 = llvm.insertvalue %10, %9[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %12 = llvm.insertvalue %arg2, %6[0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %13 = llvm.insertvalue %arg2, %12[1] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %14 = llvm.insertvalue %3, %13[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %15 = llvm.insertvalue %10, %14[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %16 = llvm.mlir.constant(20 : index) : i64
+      %17 = nvvm.read.ptx.sreg.ctaid.x : i32
+      %18 = llvm.sext %17 : i32 to i64
+      %19 = nvvm.read.ptx.sreg.ntid.x : i32
+      %20 = llvm.sext %19 : i32 to i64
+      %21 = nvvm.read.ptx.sreg.tid.x : i32
+      %22 = llvm.sext %21 : i32 to i64
+      %23 = llvm.mul %20, %18 : i64
+      %24 = llvm.add %22, %23 : i64
+      %25 = nvvm.read.ptx.sreg.nctaid.x : i32
+      %26 = llvm.sext %25 : i32 to i64
+      %27 = llvm.mul %20, %26 : i64
+      llvm.br ^bb1(%24 : i64)
+    ^bb1(%28: i64):  // 2 preds: ^bb0, ^bb2
+      %29 = llvm.icmp "slt" %28, %16 : i64
+      llvm.cond_br %29, ^bb2, ^bb3
+    ^bb2:  // pred: ^bb1
+      %30 = llvm.srem %28, %4  : i64
+      %31 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64)>
+      %32 = llvm.getelementptr %arg0[%30] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %33 = llvm.load %32 : !llvm.ptr -> f32
+      %34 = llvm.insertvalue %28, %8[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %35 = llvm.insertvalue %5, %34[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %36 = llvm.getelementptr %arg1[%28] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %37 = llvm.mul %3, %4 : i64
+      %38 = llvm.add %37, %3 : i64
+      %39 = llvm.getelementptr %36[%38] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %40 = llvm.load %39 : !llvm.ptr -> f32
+      %41 = llvm.fadd %40, %33  : f32
+      %42 = llvm.insertvalue %28, %13[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %43 = llvm.insertvalue %5, %42[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %44 = llvm.getelementptr %arg2[%28] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %45 = llvm.getelementptr %44[%38] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      llvm.store %41, %45 : f32, !llvm.ptr
+      %46 = llvm.add %28, %27 : i64
+      llvm.br ^bb1(%46 : i64)
+    ^bb3:  // pred: ^bb1
+      llvm.return
+    }
+    llvm.func @Unknown0(%arg0: !llvm.ptr {llvm.noalias}, %arg1: !llvm.ptr {llvm.noalias}, %arg2: !llvm.ptr {llvm.noalias}) attributes {gpu.kernel, nvvm.kernel} {
+      %0 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)>
+      %1 = llvm.insertvalue %arg0, %0[0] : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)> 
+      %2 = llvm.insertvalue %arg0, %1[1] : !llvm.struct<(ptr, ptr, i64, array<1 x i64>, array<1 x i64>)> 
+      %3 = llvm.mlir.constant(0 : index) : i64
+      %4 = llvm.mlir.constant(20 : index) : i64
+      %5 = llvm.mlir.constant(1 : index) : i64
+      %6 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)>
+      %7 = llvm.insertvalue %arg1, %6[0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %8 = llvm.insertvalue %arg1, %7[1] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %9 = llvm.insertvalue %3, %8[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %10 = llvm.mlir.constant(2 : index) : i64
+      %11 = llvm.insertvalue %10, %9[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %12 = llvm.insertvalue %arg2, %6[0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %13 = llvm.insertvalue %arg2, %12[1] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %14 = llvm.insertvalue %3, %13[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %15 = llvm.insertvalue %10, %14[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %16 = llvm.mlir.constant(40 : index) : i64
+      %17 = llvm.mlir.constant(0.000000e+00 : f32) : f32
+      %18 = nvvm.read.ptx.sreg.ctaid.x : i32
+      %19 = llvm.sext %18 : i32 to i64
+      %20 = nvvm.read.ptx.sreg.ntid.x : i32
+      %21 = llvm.sext %20 : i32 to i64
+      %22 = nvvm.read.ptx.sreg.tid.x : i32
+      %23 = llvm.sext %22 : i32 to i64
+      %24 = llvm.mul %21, %19 : i64
+      %25 = llvm.add %23, %24 : i64
+      %26 = nvvm.read.ptx.sreg.nctaid.x : i32
+      %27 = llvm.sext %26 : i32 to i64
+      %28 = llvm.mul %21, %27 : i64
+      llvm.br ^bb1(%25 : i64)
+    ^bb1(%29: i64):  // 2 preds: ^bb0, ^bb2
+      %30 = llvm.icmp "slt" %29, %16 : i64
+      llvm.cond_br %30, ^bb2, ^bb3
+    ^bb2:  // pred: ^bb1
+      %31 = llvm.srem %29, %4  : i64
+      %32 = llvm.mlir.undef : !llvm.struct<(ptr, ptr, i64)>
+      %33 = llvm.getelementptr %arg0[%31] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %34 = llvm.load %33 : !llvm.ptr -> f32
+      %35 = llvm.insertvalue %29, %8[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %36 = llvm.insertvalue %5, %35[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %37 = llvm.getelementptr %arg1[%29] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %38 = llvm.mul %3, %4 : i64
+      %39 = llvm.add %38, %3 : i64
+      %40 = llvm.getelementptr %37[%39] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %41 = llvm.load %40 : !llvm.ptr -> f32
+      %42 = llvm.fadd %41, %34  : f32
+      %43 = llvm.intr.maximum(%42, %17)  : (f32, f32) -> f32
+      %44 = llvm.insertvalue %29, %13[2] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %45 = llvm.insertvalue %5, %44[3, 0] : !llvm.struct<(ptr, ptr, i64, array<2 x i64>, array<2 x i64>)> 
+      %46 = llvm.getelementptr %arg2[%29] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      %47 = llvm.getelementptr %46[%39] : (!llvm.ptr, i64) -> !llvm.ptr, f32
+      llvm.store %43, %47 : f32, !llvm.ptr
+      %48 = llvm.add %29, %28 : i64
+      llvm.br ^bb1(%48 : i64)
+    ^bb3:  // pred: ^bb1
+      llvm.return
+    }
+  }
+  memref.global "private" constant @__constant_20x10xf32_cuda : memref<20x10xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_0_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20x20xf32_cuda : memref<20x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_20xf32_cuda : memref<20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10x20xf32_cuda : memref<10x20xf32, "cuda"> = dense_resource<__elided__>
+  memref.global "private" constant @__constant_10xf32_cuda : memref<10xf32, "cuda"> = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]>
+}
+
+
+// IR Dump After Byre Host:
+module attributes {byre.container_module} {
+  func.func @forward(%arg0: memref<10xf32, "cuda"> {byre.argname = "Weight0", byre.argtype = 4 : i32, byre.weight_value = dense<[0.0670170113, 0.0825609341, -0.125343189, -0.0073415176, -0.100303039, -0.214000896, 0.114002995, 0.21737574, 0.166609675, -0.119800359]> : tensor<10xf32>}, %arg1: memref<10x20xf32, "cuda"> {byre.argname = "Weight1", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<10x20xf32>}, %arg2: memref<20xf32, "cuda"> {byre.argname = "Weight2", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20xf32>}, %arg3: memref<20x20xf32, "cuda"> {byre.argname = "Weight3", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20x20xf32>}, %arg4: memref<20xf32, "cuda"> {byre.argname = "Weight4", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20xf32>}, %arg5: memref<20x10xf32, "cuda"> {byre.argname = "Weight5", byre.argtype = 4 : i32, byre.weight_value = dense_resource<__elided__> : tensor<20x10xf32>}, %arg6: memref<2x10xf32, "cuda"> {byre.argname = "Input0", byre.argtype = 1 : i32}, %arg7: memref<2x10xf32, "cuda"> {byre.argname = "Output0", byre.argtype = 2 : i32}) attributes {byre.entry_point} {
+    %alloc = memref.alloc() : memref<512xi8, "cuda">
+    %0 = "byre.alias"(%alloc) <{offset = 0 : i64}> : (memref<512xi8, "cuda">) -> memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%arg6, %arg5, %0) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x10xf32, "cuda">, memref<20x10xf32, "cuda">, memref<2x20xf32, "cuda">
+    %1 = "byre.alias"(%alloc) <{offset = 256 : i64}> : (memref<512xi8, "cuda">) -> memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%arg4, %0, %1) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%1, %arg3, %0) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<20x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    byre.compute @PTXOp(%arg2, %0, %1) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown0"} : memref<20xf32, "cuda">, memref<2x20xf32, "cuda">, memref<2x20xf32, "cuda">
+    %2 = "byre.alias"(%alloc) <{offset = 0 : i64}> : (memref<512xi8, "cuda">) -> memref<2x10xf32, "cuda">
+    byre.compute @MatmulOp_f32f32_f32(%1, %arg1, %2) {device = "cuda", lhs_contracting_dimension = 1 : i64, memory_effects = [1 : i32, 1 : i32, 2 : i32], rhs_contracting_dimension = 1 : i64} : memref<2x20xf32, "cuda">, memref<10x20xf32, "cuda">, memref<2x10xf32, "cuda">
+    byre.compute @PTXOp(%arg0, %2, %arg7) {BlockSize.x = 256 : i32, BlockSize.y = 1 : i32, BlockSize.z = 1 : i32, GridSize.x = 1 : i32, GridSize.y = 1 : i32, GridSize.z = 1 : i32, call_convention = "bare_ptr", device = "cuda", device_file_name = "out.ptx", kernel_name = "Unknown2"} : memref<10xf32, "cuda">, memref<2x10xf32, "cuda">, memref<2x10xf32, "cuda">
+    return
+  }
+}
+
+
