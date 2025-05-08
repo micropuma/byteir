@@ -7,6 +7,7 @@ cmake -B./compiler/build \
       -DLLVM_EXTERNAL_LIT=/mnt/home/douliyang/mlir-workspace/byteir/venv/bin/lit \
       -Dpybind11_DIR=/mnt/home/douliyang/mlir-workspace/byteir/venv/lib/python3.11/site-packages/pybind11/share/cmake/pybind11 \
       -Dnanobind_DIR=/mnt/home/douliyang/mlir-workspace/byteir/venv/lib/python3.11/site-packages/nanobind/cmake \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
       -DBYTEIR_ENABLE_BINDINGS_PYTHON=ON
 
 cmake --build ./compiler/build --target check-byteir
