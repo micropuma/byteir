@@ -21,6 +21,7 @@
 
 using namespace mlir;
 
+// 封装一个clean up pass
 void mlir::addCleanUpExtPassPipeline(OpPassManager &pm, bool isModuleOp) {
   pm.addPass(createCSEPass());
   pm.addPass(createSCCPPass());

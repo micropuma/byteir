@@ -80,6 +80,8 @@ def _print_verbose(module: ir.Module, pipeline_msg: str):
     print()
 
 
+# 装饰器 
+# cuda 编译pass pipeline 
 @register_byteir_compiler_backend(target="cuda", device="cuda")
 def _compile_cuda(
     compile_options: CompileOptions,
@@ -406,6 +408,7 @@ def compile_from_string(
     _print_verbose(module, "// IR Dump Input MLIR:") if verbose else ...
 
     ### legalize stablehlo to mhlo
+    # 将stableHLO变成mhlo，规则化
     with context:
         PassManager.parse("builtin.module(canonicalize,stablehlo-legalize-to-hlo,canonicalize)").run(module.operation)
         _print_verbose(module, "// IR Dump After Legalize to HLO:") if verbose else ...
@@ -439,12 +442,14 @@ def compile_from_string(
         kwargs=kwargs)
 
     ### compiling
+    # 输入的是规范化的mhlo dialect，进入compiler流程
     _compile_fn = look_up_backend(compile_options.target)
     if _compile_fn is not None:
         _compile_fn(compile_options)
     else:
         raise NotImplementedError("not implemented target: {}".format(target))
 
+# compiler pass pipeline的入口函数
 def compile(
     input_file_path: str,
     output_file_path: str,
